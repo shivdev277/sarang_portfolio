@@ -2,43 +2,50 @@ import { motion } from 'framer-motion'
 
 const items = [
   {
-    date: 'Apr 2025 – Sep 2025',
-    title: 'Full Stack Developer Intern — TRANSMED (Remote)',
-    desc: 'Maintained a production web platform with React.js and MySQL over a 6-month engagement; delivered 10+ responsive components and integrated REST APIs with optimized queries, following secure coding practices.',
+    date: 'Apr 2025 - Sep 2025',
+    title: 'Full Stack Developer Intern - TRANSMED',
+    desc:
+      'Worked on a production platform with React.js and MySQL, shipping responsive UI improvements, REST API integrations, and day-to-day fixes across a 6 month internship.',
   },
   {
     date: '2025',
-    title: '15+ CTF competitions — HackTheBox & TryHackMe',
-    desc: 'Solved challenges spanning web exploitation, cryptography, reverse engineering, network forensics, and OSINT. Reached top 9% global rank on TryHackMe.',
-  },
-  {
-    date: '2024',
-    title: 'Top 15 Finalist — Smart India Hackathon (University Level)',
-    desc: 'Recognized among the top 15 teams at the university-level round of SIH.',
+    title: '15+ CTF Competitions - HackTheBox and TryHackMe',
+    desc:
+      'Solved competitive security challenges covering web exploitation, cryptanalysis, reverse engineering, network forensics, and OSINT during an active year of practice.',
   },
 ]
 
 export default function Timeline() {
   return (
-    <section className="relative z-10 max-w-5xl mx-auto px-6 py-20 border-t border-line">
-      <h2 className="font-mono text-2xl font-bold mb-2">Experience</h2>
-      <p className="text-dim text-sm mb-10">what the last two years actually looked like</p>
+    <section
+      id="experience"
+      className="relative z-10 mx-auto max-w-5xl scroll-mt-20 border-t border-line px-6 py-20"
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 18 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.45, ease: 'easeOut' }}
+      >
+        <h2 className="font-mono text-2xl font-bold text-text">Experience</h2>
+        <p className="mt-2 text-sm text-dim">work and competitive security practice</p>
+      </motion.div>
 
-      <div className="relative pl-8 border-l-2 border-line">
-        {items.map((item, i) => (
-          <motion.div
+      <div className="relative mt-10 border-l-2 border-line pl-8">
+        {items.map((item, index) => (
+          <motion.article
             key={item.title}
-            initial={{ opacity: 0, x: -14 }}
+            initial={{ opacity: 0, x: -18 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, amount: 0.4 }}
-            transition={{ duration: 0.4, delay: i * 0.1 }}
-            className="relative pb-9 last:pb-0"
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.4, delay: index * 0.08, ease: 'easeOut' }}
+            className="relative pb-10 last:pb-0"
           >
-            <span className="absolute -left-[37px] top-1 w-2.5 h-2.5 rounded-full bg-amber shadow-[0_0_0_4px_rgba(255,180,84,0.15)]" />
-            <div className="font-mono text-[11px] text-amber mb-1">{item.date}</div>
-            <h4 className="text-[14px] font-semibold mb-1">{item.title}</h4>
-            <p className="text-dim text-[13px] leading-relaxed">{item.desc}</p>
-          </motion.div>
+            <span className="absolute -left-[37px] top-1 h-3 w-3 rounded-full bg-amber shadow-[0_0_0_5px_rgba(255,180,84,0.14)]" />
+            <p className="font-mono text-xs uppercase tracking-[0.16em] text-amber">{item.date}</p>
+            <h3 className="mt-2 text-base font-semibold text-text">{item.title}</h3>
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-dim">{item.desc}</p>
+          </motion.article>
         ))}
       </div>
     </section>
