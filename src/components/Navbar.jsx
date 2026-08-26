@@ -97,7 +97,7 @@ export default function Navbar() {
           : 'border-b border-transparent bg-transparent'
       }`}
     >
-      <nav className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
+      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-8 lg:px-14 xl:px-20">
         <a href="#top" className="font-mono text-sm font-bold tracking-[0.2em] text-text">
           sarang<span className="text-amber">.</span>dev
         </a>
@@ -123,7 +123,7 @@ export default function Navbar() {
               onClick={() => setCvOpen((open) => !open)}
               className="rounded-lg border border-line bg-surface/80 px-4 py-2 font-mono text-xs text-text transition-colors hover:border-amber hover:text-amber"
             >
-              CV &#9662;
+              CV ▾
             </button>
 
             <AnimatePresence>
@@ -178,7 +178,7 @@ export default function Navbar() {
             exit="exit"
             className="overflow-hidden border-b border-line bg-[#0b0e13]/95 backdrop-blur-xl md:hidden"
           >
-            <motion.ul className="mx-auto flex max-w-5xl flex-col gap-4 px-6 pb-5 pt-2 font-mono text-sm">
+            <motion.ul className="mx-auto flex max-w-7xl flex-col gap-4 px-4 pb-5 pt-2 font-mono text-sm sm:px-8 lg:px-14 xl:px-20">
               {navLinks.map((link) => (
                 <motion.li key={link.href} variants={mobileItemVariants}>
                   <a
@@ -204,4 +204,3 @@ export default function Navbar() {
     </motion.header>
   )
 }
-

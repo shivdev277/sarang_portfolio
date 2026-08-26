@@ -1,39 +1,63 @@
-import { motion } from 'framer-motion'
+﻿import { motion } from 'framer-motion'
 
 const projects = [
   {
     title: 'Image Encryption Tool',
-    stack: 'JavaScript - Applied Cryptography',
-    desc: 'Command-line tool that encrypts and decrypts image files using cryptographic algorithms, with input validation and error handling to protect sensitive visual data from unauthorized access.',
-    color: 'cyan',
+    stack: 'JavaScript, Applied Cryptography',
+    desc:
+      'CLI tool for encrypting and decrypting image files with input validation and safer handling for malformed or missing file input.',
+    accent: 'text-cyan',
   },
   {
-    title: 'Decentralized Cloud Storage & Online Voting System',
-    stack: 'Python - JavaScript - Solidity - Web3.js - Ethereum',
-    desc: 'Two blockchain-based applications: a decentralized file storage platform and an Ethereum voting system, using Solidity smart contracts for access control and tamper-proof record storage alongside a React/Node.js frontend.',
-    color: 'amber',
+    title: 'Decentralized Cloud Storage System',
+    stack: 'Python, JavaScript, Solidity, Web3.js, Ethereum',
+    desc:
+      'Blockchain-based file storage with Solidity smart contracts for access control and tamper-proof storage, paired with a React and Node.js frontend.',
+    accent: 'text-cyan',
+  },
+  {
+    title: 'Blockchain Voting System',
+    stack: 'Python, JavaScript, Solidity, Web3.js, Ethereum',
+    desc:
+      'Ethereum-based voting system using smart contracts for tamper-proof vote recording, with a React frontend for secure vote submission.',
+    accent: 'text-amber',
+  },
+  {
+    title: 'Network Firewall',
+    stack: '[ Add stack here ]',
+    desc:
+      'Placeholder project card. Replace this with the real firewall architecture, packet filtering logic, and deployment details once they are ready.',
+    placeholder: true,
+    accent: 'text-dim',
   },
 ]
 
 export default function Projects() {
   return (
-    <section id="projects" className="relative z-10 max-w-5xl mx-auto px-6 py-20 border-t border-line scroll-mt-20">
-      <h2 className="font-mono text-2xl font-bold mb-2">Projects</h2>
-      <p className="text-dim text-sm mb-8">applied security & systems work, outside the CTF grid</p>
+    <section
+      id="projects"
+      className="relative z-10 mx-auto max-w-7xl scroll-mt-20 border-t border-line px-4 py-20 sm:px-8 lg:px-14 xl:px-20"
+    >
+      <h2 className="mb-2 font-mono text-2xl font-bold">Projects</h2>
+      <p className="mb-8 text-sm text-dim">applied security and systems work, outside the CTF grid</p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        {projects.map((p, i) => (
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+        {projects.map((project, index) => (
           <motion.div
-            key={p.title}
+            key={project.title}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.45, delay: i * 0.1 }}
-            className="bg-surface border border-line rounded-xl p-6"
+            transition={{ duration: 0.45, delay: index * 0.1 }}
+            className={`rounded-xl p-6 ${
+              project.placeholder
+                ? 'border-2 border-dashed border-line bg-surface/60'
+                : 'border border-line bg-surface'
+            }`}
           >
-            <h3 className="text-[17px] font-semibold mb-1">{p.title}</h3>
-            <div className="font-mono text-[11px] text-cyan mb-3">{p.stack}</div>
-            <p className="text-dim text-[13px] leading-relaxed">{p.desc}</p>
+            <h3 className="mb-1 text-[17px] font-semibold">{project.title}</h3>
+            <div className={`mb-3 font-mono text-[11px] ${project.accent}`}>{project.stack}</div>
+            <p className="text-[13px] leading-relaxed text-dim">{project.desc}</p>
           </motion.div>
         ))}
       </div>

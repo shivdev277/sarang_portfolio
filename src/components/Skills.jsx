@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+﻿import { motion } from 'framer-motion'
 
 const skills = [
   { label: 'Web Exploitation', value: 92 },
@@ -10,18 +10,18 @@ const skills = [
 
 export default function Skills() {
   return (
-    <section className="relative z-10 max-w-5xl mx-auto px-6 py-20 border-t border-line">
-      <h2 className="font-mono text-2xl font-bold mb-2">Focus Areas</h2>
-      <p className="text-dim text-sm mb-8">weighted by hours logged, not vibes</p>
+    <section className="relative z-10 mx-auto max-w-7xl border-t border-line px-4 py-20 sm:px-8 lg:px-14 xl:px-20">
+      <h2 className="mb-2 font-mono text-2xl font-bold">Focus Areas</h2>
+      <p className="mb-8 text-sm text-dim">weighted by hours logged, not vibes</p>
 
       <div className="space-y-5">
         {skills.map((s, i) => (
           <div key={s.label}>
-            <div className="flex justify-between text-[13px] mb-1.5">
+            <div className="mb-1.5 flex justify-between text-[13px]">
               <span className="font-mono text-text">{s.label}</span>
               <span className="text-dim">{s.value}%</span>
             </div>
-            <div className="h-1.5 bg-surface2 rounded-full overflow-hidden">
+            <div className="h-1.5 overflow-hidden rounded-full bg-surface2">
               <motion.div
                 initial={{ width: 0 }}
                 whileInView={{ width: `${s.value}%` }}

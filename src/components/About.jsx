@@ -1,10 +1,10 @@
-import { motion } from 'framer-motion'
+﻿import { motion } from 'framer-motion'
 
 export default function About() {
   return (
     <section
       id="about"
-      className="relative z-10 mx-auto max-w-5xl scroll-mt-20 border-t border-line px-6 py-20"
+      className="relative z-10 mx-auto max-w-7xl scroll-mt-20 border-t border-line px-4 py-20 sm:px-8 lg:px-14 xl:px-20"
     >
       <motion.div
         initial={{ opacity: 0, y: 18 }}
