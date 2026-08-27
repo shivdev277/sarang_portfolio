@@ -1,4 +1,5 @@
 ﻿import { motion } from 'framer-motion'
+import GlitchText from './GlitchText.jsx'
 
 const items = [
   {
@@ -27,7 +28,7 @@ export default function Timeline() {
         viewport={{ once: true, amount: 0.3 }}
         transition={{ duration: 0.45, ease: 'easeOut' }}
       >
-        <h2 className="font-mono text-2xl font-bold text-text">Experience</h2>
+        <GlitchText text="Experience" />
         <p className="mt-2 text-sm text-dim">work and competitive security practice</p>
       </motion.div>
 

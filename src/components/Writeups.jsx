@@ -1,5 +1,6 @@
 ﻿import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
+import GlitchText from './GlitchText.jsx'
 
 const GITHUB_USERNAME = 'shivdev277'
 const WRITEUPS_REPO = 'Writeups'
@@ -64,7 +65,7 @@ export default function Writeups() {
         viewport={{ once: true, amount: 0.3 }}
         transition={{ duration: 0.45, ease: 'easeOut' }}
       >
-        <h2 className="font-mono text-2xl font-bold text-text">Writeups</h2>
+        <GlitchText text="Writeups" />
         <p className="mt-2 text-sm text-dim">
           Folder entries pulled from
           <a

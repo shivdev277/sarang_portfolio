@@ -1,4 +1,5 @@
 ﻿import { motion } from 'framer-motion'
+import GlitchText from './GlitchText.jsx'
 
 const achievements = [
   {
@@ -33,7 +34,7 @@ export default function Achievements() {
         viewport={{ once: true, amount: 0.3 }}
         transition={{ duration: 0.45, ease: 'easeOut' }}
       >
-        <h2 className="font-mono text-2xl font-bold text-text">Achievements</h2>
+        <GlitchText text="Achievements" />
       </motion.div>
 
       <div className="mt-8 grid gap-4 lg:grid-cols-3">

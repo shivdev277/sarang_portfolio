@@ -1,4 +1,5 @@
 ﻿import { motion } from 'framer-motion'
+import GlitchText from './GlitchText.jsx'
 
 const skills = [
   { label: 'Web Exploitation', value: 92 },
@@ -11,7 +12,9 @@ const skills = [
 export default function Skills() {
   return (
     <section className="relative z-10 mx-auto max-w-7xl border-t border-line px-4 py-20 sm:px-8 lg:px-14 xl:px-20">
-      <h2 className="mb-2 font-mono text-2xl font-bold">Focus Areas</h2>
+      <div className="mb-2">
+        <GlitchText text="Focus Areas" />
+      </div>
       <p className="mb-8 text-sm text-dim">weighted by hours logged, not vibes</p>
 
       <div className="space-y-5">

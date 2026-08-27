@@ -1,6 +1,10 @@
-﻿import { motion } from 'framer-motion'
+﻿import { useState } from 'react'
+import { motion } from 'framer-motion'
+import GlitchText from './GlitchText.jsx'
 
 export default function About() {
+  const [imageError, setImageError] = useState(false)
+
   return (
     <section
       id="about"
@@ -12,18 +16,32 @@ export default function About() {
         viewport={{ once: true, amount: 0.3 }}
         transition={{ duration: 0.45, ease: 'easeOut' }}
       >
-        <h2 className="font-mono text-2xl font-bold text-text">About</h2>
+        <GlitchText text="About" />
       </motion.div>
 
       <div className="mt-8 grid items-start gap-8 md:grid-cols-[220px_minmax(0,1fr)]">
         <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
+          initial={{ opacity: 0, scale: 0.85 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.4, ease: 'easeOut' }}
-          className="flex h-56 w-full max-w-[220px] items-center justify-center rounded-2xl border-2 border-dashed border-line bg-surface/70 px-6 text-center font-mono text-xs uppercase tracking-[0.3em] text-dim"
+          transition={{ duration: 0.45, ease: 'easeOut' }}
+          className="relative h-56 w-full max-w-[220px]"
         >
-          add your photo here
+          <div className="absolute inset-4 -z-10 rounded-[2rem] bg-gradient-to-br from-cyan/40 via-cyan/20 to-amber/40 blur-3xl animate-pulse" />
+          {imageError ? (
+            <div className="flex h-full w-full items-center justify-center rounded-2xl border-2 border-dashed border-line bg-surface/70 px-6 text-center font-mono text-xs uppercase tracking-[0.3em] text-dim">
+              add public/profile.jpeg
+            </div>
+          ) : (
+            <div className="relative h-full w-full overflow-hidden rounded-2xl border border-line bg-surface shadow-[0_18px_36px_rgba(0,0,0,0.28)]">
+              <img
+                src="/profile.jpeg"
+                alt="Sarang Dev"
+                className="h-full w-full object-cover"
+                onError={() => setImageError(true)}
+              />
+            </div>
+          )}
         </motion.div>
 
         <motion.p
