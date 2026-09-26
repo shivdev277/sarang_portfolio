@@ -4,143 +4,128 @@ import GlitchText from './GlitchText.jsx'
 
 const GITHUB_USERNAME = 'shivdev277'
 const WRITEUPS_REPO = 'Writeups'
-const GITHUB_API_URL = `https://api.github.com/repos/${GITHUB_USERNAME}/${WRITEUPS_REPO}/contents`
+const CACHE_KEY = `writeups-cache-${GITHUB_USERNAME}-${WRITEUPS_REPO}`
+const CACHE_TTL_MS = 60 * 60 * 1000
+
+const folderColor = {
+  tryhackme: 'red',
+  TryHackMe: 'red',
+  hackthebox: 'cyan',
+  HackTheBox: 'cyan',
+  htb: 'cyan',
+  vulnhub: 'amber',
+  Vulnhub: 'amber',
+  default: 'purple',
+}
 
 export default function Writeups() {
-  const [folders, setFolders] = useState([])
+  const [entries, setEntries] = useState([])
   const [status, setStatus] = useState('loading')
 
   useEffect(() => {
-    let cancelled = false
-
-    async function loadWriteups() {
-      setStatus('loading')
-
-      try {
-        const response = await fetch(GITHUB_API_URL)
-
-        if (response.status === 404) {
-          throw new Error('not-found')
-        }
-
-        if (!response.ok) {
-          throw new Error('request-failed')
-        }
-
-        const data = await response.json()
-
-        if (cancelled) {
+    try {
+      const cached = sessionStorage.getItem(CACHE_KEY)
+      if (cached) {
+        const parsed = JSON.parse(cached)
+        if (Date.now() - parsed.timestamp < CACHE_TTL_MS) {
+          setEntries(parsed.entries)
+          setStatus('ok')
           return
         }
-
-        const writeupFolders = Array.isArray(data)
-          ? data.filter((item) => item.type === 'dir')
-          : []
-
-        setFolders(writeupFolders)
-        setStatus('ok')
-      } catch (error) {
-        if (!cancelled) {
-          setFolders([])
-          setStatus(error.message === 'not-found' ? 'not-found' : 'error')
-        }
       }
+    } catch {
+      // sessionStorage unavailable or corrupted cache, fall through to fetch
     }
 
-    loadWriteups()
-
-    return () => {
-      cancelled = true
-    }
+    fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${WRITEUPS_REPO}/contents`)
+      .then(async (res) => {
+        if (res.status === 404) throw new Error('notfound')
+        if (res.status === 403) throw new Error('ratelimited')
+        if (!res.ok) throw new Error('error')
+        return res.json()
+      })
+      .then((data) => {
+        const dirs = Array.isArray(data) ? data.filter((item) => item.type === 'dir') : []
+        setEntries(dirs)
+        setStatus('ok')
+        try {
+          sessionStorage.setItem(CACHE_KEY, JSON.stringify({ entries: dirs, timestamp: Date.now() }))
+        } catch {
+          // ignore storage errors, caching is a nice-to-have only
+        }
+      })
+      .catch((err) =>
+        setStatus(
+          err.message === 'notfound' ? 'notfound' : err.message === 'ratelimited' ? 'ratelimited' : 'error'
+        )
+      )
   }, [])
 
   return (
-    <section
-      id="writeups"
-      className="relative z-10 mx-auto max-w-7xl scroll-mt-20 border-t border-line px-4 py-20 sm:px-8 lg:px-14 xl:px-20"
-    >
-      <motion.div
-        initial={{ opacity: 0, y: 18 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 0.45, ease: 'easeOut' }}
-      >
-        <GlitchText text="Writeups" />
-        <p className="mt-2 text-sm text-dim">
-          Folder entries pulled from
-          <a
-            href={`https://github.com/${GITHUB_USERNAME}/${WRITEUPS_REPO}`}
-            target="_blank"
-            rel="noreferrer"
-            className="ml-1 text-cyan transition-colors hover:text-amber"
-          >
-            github.com/{GITHUB_USERNAME}/{WRITEUPS_REPO}
-          </a>
-        </p>
-      </motion.div>
+    <section id="writeups" className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 lg:px-14 xl:px-20 py-20 border-t border-line scroll-mt-20">
+      <GlitchText text="Writeups" />
+
+      <p className="text-dim text-sm mb-8">
+        pulled live from <a className="text-cyan hover:underline" href={`https://github.com/${GITHUB_USERNAME}/${WRITEUPS_REPO}`} target="_blank" rel="noreferrer">github.com/{GITHUB_USERNAME}/{WRITEUPS_REPO}</a>
+      </p>
 
       {status === 'loading' && (
-        <p className="mt-8 font-mono text-sm text-dim">Loading writeup folders...</p>
+        <p className="text-dim font-mono text-sm">fetching writeups</p>
       )}
 
-      {status === 'not-found' && (
-        <p className="mt-8 max-w-xl text-sm leading-6 text-dim">
-          The writeups repository was not found. Check the
-          <span className="mx-1 font-mono text-amber">WRITEUPS_REPO</span>
-          constant in this file and confirm the repository name is correct.
+      {status === 'notfound' && (
+        <p className="text-dim font-mono text-sm">
+          could not find a repo named "{WRITEUPS_REPO}" on GitHub. Update WRITEUPS_REPO
+          in src/components/Writeups.jsx to match your actual repo name.
+        </p>
+      )}
+
+      {status === 'ratelimited' && (
+        <p className="text-dim font-mono text-sm">
+          GitHub's public API has a temporary request limit on this network. Browse the
+          writeups directly at <a className="text-cyan hover:underline" href={`https://github.com/${GITHUB_USERNAME}/${WRITEUPS_REPO}`} target="_blank" rel="noreferrer">github.com/{GITHUB_USERNAME}/{WRITEUPS_REPO}</a> in the meantime, this section will load normally again shortly.
         </p>
       )}
 
       {status === 'error' && (
-        <p className="mt-8 max-w-xl text-sm leading-6 text-dim">
-          The GitHub Contents API could not be reached right now. Review the repository directly at
-          <a
-            href={`https://github.com/${GITHUB_USERNAME}/${WRITEUPS_REPO}`}
-            target="_blank"
-            rel="noreferrer"
-            className="ml-1 text-cyan transition-colors hover:text-amber"
-          >
-            github.com/{GITHUB_USERNAME}/{WRITEUPS_REPO}
-          </a>
-          .
+        <p className="text-dim font-mono text-sm">
+          could not load writeups right now, check the <a className="text-cyan hover:underline" href={`https://github.com/${GITHUB_USERNAME}/${WRITEUPS_REPO}`}>repo</a> directly.
         </p>
       )}
 
-      {status === 'ok' && folders.length === 0 && (
-        <p className="mt-8 font-mono text-sm text-dim">
-          No writeup folders were found in this repository yet.
-        </p>
+      {status === 'ok' && entries.length === 0 && (
+        <p className="text-dim font-mono text-sm">no folders found in this repo yet.</p>
       )}
 
-      {status === 'ok' && folders.length > 0 && (
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {folders.map((folder, index) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {entries.map((entry, i) => {
+          const color = folderColor[entry.name] || folderColor.default
+          return (
             <motion.a
-              key={folder.path}
-              href={folder.html_url}
+              key={entry.sha}
+              href={entry.html_url}
               target="_blank"
               rel="noreferrer"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.4, delay: (index % 6) * 0.06, ease: 'easeOut' }}
-              className="flex h-full flex-col rounded-2xl border border-line bg-surface/80 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-cyan/60 hover:shadow-[0_16px_36px_rgba(0,0,0,0.2)]"
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.4, delay: (i % 6) * 0.06 }}
+              className="block bg-surface border border-line rounded-xl p-5 hover:-translate-y-1 hover:shadow-xl transition-transform duration-300"
             >
-              <div className="flex items-start justify-between gap-4">
-                <span className="rounded-full bg-[rgba(94,230,208,0.12)] px-2.5 py-1 font-mono text-[11px] text-cyan">
-                  Folder
-                </span>
-                <span className="font-mono text-[11px] text-dim">Open on GitHub</span>
-              </div>
-
-              <h3 className="mt-4 text-base font-semibold text-text">{folder.name}</h3>
-              <p className="mt-3 text-sm leading-6 text-dim">
-                Explore this writeup folder in the {WRITEUPS_REPO} repository.
+              <span
+                className="inline-block font-mono text-[11px] px-2 py-0.5 rounded mb-3 border"
+                style={{ color, borderColor: color, backgroundColor: `${color}22` }}
+              >
+                FOLDER
+              </span>
+              <h3 className="text-[16px] font-semibold mb-1">{entry.name}</h3>
+              <p className="text-dim text-[13px] leading-relaxed">
+                Open this folder on GitHub to see the writeups inside.
               </p>
             </motion.a>
-          ))}
-        </div>
-      )}
+          )
+        })}
+      </div>
     </section>
   )
 }
